@@ -50,11 +50,7 @@ void ofApp::setup() {
         y+=100;
     }
     
-    
-    
-    
-    
-    
+
     
 }
 
@@ -81,10 +77,10 @@ void ofApp::draw() {
     
     ofSetColor(255);
     
-    //======================== draw image into fbo.
+    //======================== 画像を画角の中のDrawで指定した場所に描画
     for(int i = 0 ; i <NUM ;i++){
     fbo[i].begin();
-    img[i].draw(10, 10);
+    img[i].draw(10, 10); //コメント会うとすると画像は表示されない。
     fbo[i].end();
         cout << &fbo[i] <<endl;
     }
@@ -106,7 +102,7 @@ void ofApp::draw() {
     ofPopMatrix();
      }
     
-    //======================== use the matrix to transform points.
+    //======================== ランダムの線が描画される場所(一旦コメントアウト)
     
     ofSetLineWidth(2);
     ofSetColor(ofColor::cyan);
@@ -121,7 +117,7 @@ void ofApp::draw() {
         ofDrawLine(p1.x, p1.y, p2.x, p2.y);
     }*/
     
-    //======================== draw quad warp ui. UI„ÅÆË°®Á§∫
+    //======================== UI部分の実装
     for(int i = 0 ; i <NUM ;i++){
         ofSetColor(ofColor::magenta);
         warper[i].drawQuadOutline();
@@ -152,7 +148,7 @@ void ofApp::exit() {
     }
 }
 
-//--------------------------------------------------------------
+//------------------------------------------各キーの割り当て
 void ofApp::keyPressed(int key) {
     
     if(key == 's' || key == 'S') {
@@ -177,6 +173,8 @@ void ofApp::keyPressed(int key) {
 
     }
     
+    //以下指定した領域の画像を抜き出してFBOに入れて~みたな事をしようとしていた。
+    
     if(key == 'z' || key == 'Z') {
         img_.grabScreen(0, 0 , ofGetWidth(), ofGetHeight());
         image.push_back(img_);
@@ -198,6 +196,22 @@ void ofApp::keyPressed(int key) {
         warper_[0].setBottomRightCornerPosition( ofPoint( x + w_, y + h_ ) );
         warper_[0].setup();
         
+        fbo_[0].begin();
+        image[0].draw(10, 10);
+        fbo_[0].end();
+        
+        ofMatrix4x4 mat_;
+        
+       
+        mat_ = warper_[0].getMatrix();
+        
+        ofPushMatrix();
+        ofMultMatrix(mat_);
+        fbo_[0].draw(0, 0);
+        ofPopMatrix();
+        
+        
+        
         ofSetColor(ofColor::magenta);
         warper_[0].drawQuadOutline();
         
@@ -211,14 +225,7 @@ void ofApp::keyPressed(int key) {
         ofSetColor(ofColor::red);
         warper_[0].drawSelectedCorner();
 
-        
-        
-        
-        
-        
-        
-        
-        
+ 
         
     }
 }
